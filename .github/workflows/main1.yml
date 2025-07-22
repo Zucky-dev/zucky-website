@@ -1,0 +1,29 @@
+name: Update Twitter Followers
+
+  on:
+    schedule:
+      - cron: '0 * * * *'
+    workflow_dispatch:
+
+  jobs:
+    update-followers:
+      runs-on: ubuntu-latest
+
+      steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Update stats manually
+        run: echo
+  '{"twitterFollowers":25,"tokenHolders":0,"marketCap":"$0","totalSupply":"1B","lastUpdated":"'$(date
+  -Iseconds)'"}' > data/stats.json
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          git add data/stats.json
+          git diff --staged --quiet || git commit -m "Update stats [automated]"
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
