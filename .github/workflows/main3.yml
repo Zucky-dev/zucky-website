@@ -1,0 +1,20 @@
+
+  name: Test
+
+  on:
+    workflow_dispatch:
+
+  jobs:
+    test:
+      runs-on: ubuntu-latest
+      steps:
+        - uses: actions/checkout@v4
+        - name: Update file
+          run: echo 25 > data/followers.txt
+        - name: Commit
+          run: |
+            git config user.name "Bot"
+            git config user.email "bot@github.com"
+            git add .
+            git commit -m "update" || exit 0
+            git push
